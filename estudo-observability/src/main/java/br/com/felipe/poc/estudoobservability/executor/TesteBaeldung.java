@@ -3,7 +3,11 @@ package br.com.felipe.poc.estudoobservability.executor;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import br.com.felipe.poc.estudoobservability.handler.SimpleLoggingHandler;
+import br.com.felipe.poc.estudoobservability.service.GreetingService;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Statistic;
@@ -25,11 +29,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
+@Component
 public class TesteBaeldung {
 	
 	private static final String LINHA_DIVISORIA = "--------------------------";
 	
-	public static void observationEObservationRegistry() {
+	@Autowired
+	private GreetingService greetingService;
+	
+	public void observationEObservationRegistry() {
 		log.info("Executando observationEObservationRegistry");
 		ObservationRegistry observationRegistry = ObservationRegistry.create();
 		Observation observation = Observation.createNotStarted("sample", observationRegistry);
@@ -39,7 +47,7 @@ public class TesteBaeldung {
 		forma2DeExecutarUmObservation(observation);
 	}
 
-	public static void observationHandler() {
+	public void observationHandler() {
 		log.info("Executando observationHandler");
 		ObservationRegistry observationRegistry = ObservationRegistry.create();
 		
@@ -48,7 +56,7 @@ public class TesteBaeldung {
 		utilizandoObservationTextPublisher(observationRegistry);
 	}
 	
-	public static void temporizadorEContador() {
+	public void temporizadorEContador() {
 		log.info("Executnado temporizadorEContador (Timer Samples and Counters");
 		MeterRegistry meterRegistry = new SimpleMeterRegistry();
 		ObservationHandler<Context> defaultMeterObservationHandler = new DefaultMeterObservationHandler(meterRegistry);
@@ -71,10 +79,14 @@ public class TesteBaeldung {
 		  .map(Measurement::getValue)
 		;
 		
-		log.info("Tempo máximo de execução: {}", maximumDuration);
+		log.info("Tempo máximo de execução: {}", maximumDuration.get());
 	}
 
-	private static void forma1DeExecutarUmObservation(Observation observation) {
+	public void utilizandoIntegracaoComSpringActuator() {
+		log.info(greetingService.sayHello());		
+	}
+
+	private void forma1DeExecutarUmObservation(Observation observation) {
 		observation.start();
 		try {
 			log.info("Forma 1 de executar um Observation");
@@ -86,11 +98,11 @@ public class TesteBaeldung {
 		
 	}
 	
-	private static void forma2DeExecutarUmObservation(Observation observation) {
+	private void forma2DeExecutarUmObservation(Observation observation) {
 		observation.observe( () -> log.info("Forma 2 de executar um Observation"));
 	}
 	
-	private static void utilizandoSimpleLoggingHandler(ObservationRegistry observationRegistry) {
+	private void utilizandoSimpleLoggingHandler(ObservationRegistry observationRegistry) {
 		log.info("Utilizando o SimpleLoggingHandler");
 		observationRegistry
 			.observationConfig()
@@ -102,7 +114,7 @@ public class TesteBaeldung {
 		
 	}
 
-	private static void utilizandoObservationTextPublisher(ObservationRegistry observationRegistry) {
+	private void utilizandoObservationTextPublisher(ObservationRegistry observationRegistry) {
 		log.info("Utilizando o ObservationTextPublisher");
 		observationRegistry
 			.observationConfig()
@@ -111,5 +123,6 @@ public class TesteBaeldung {
 		Observation observation = Observation.createNotStarted("sample", observationRegistry);
 		forma2DeExecutarUmObservation(observation);
 	}
+
 
 }
