@@ -8,13 +8,13 @@ import org.springframework.web.filter.ServerHttpObservationFilter;
 
 import io.micrometer.observation.ObservationRegistry;
 
-@Configuration
+//@Configuration
 public class ObservationFilterConfiguration {
 
-	@ConditionalOnBean(ObservationRegistry.class)
-	@ConditionalOnMissingBean(ServerHttpObservationFilter.class)
-	@Bean
-	public ServerHttpObservationFilter observationFilter (ObservationRegistry registry) {
-		return new ServerHttpObservationFilter(registry);
-	}
+//	@ConditionalOnBean(ObservationRegistry.class)
+//	@ConditionalOnMissingBean(ServerHttpObservationFilter.class)
+//	@Bean
+//	public ServerHttpObservationFilter observationFilter (ObservationRegistry registry) {
+//		return new ServerHttpObservationFilter(registry);
+//	}
 }
